@@ -6,16 +6,31 @@ unsigned char Painter::getMaskForBit(unsigned int bit) const {
     return 1 << bit;
 }
 
-void Painter::paintCube(unsigned int layer, unsigned char* layerData, unsigned int size) const {
-    unsigned char layerByte = getMaskForBit(layer);
+unsigned char Painter::getNthBit(unsigned char byte, unsigned int n) const {
+    return (byte & getMaskForBit(n)) >> n;
+}
 
+void Painter::paintCube(const Cube& cube, unsigned int frames) const {
     initPaint();
 
-    shiftOut(layerByte, ShiftMode::MSB_FIRST);
-    shiftOut(0xFF, ShiftMode::LSB_FIRST);
-    shiftOut(0xFF, ShiftMode::LSB_FIRST);
+    const unsigned char* plane;
 
-    dataReady();
+    for(unsigned int frame = 0; frame < frames; ++frame) {
+        for(unsigned int z = 0; z < cube.getSize(); ++z) {
+            plane = cube.getLayer(z);
+            
+            // layer selection
+            shiftOut(getMaskForBit(z), ShiftMode::MSB_FIRST);
+
+            // draw xy plane
+            for(unsigned int i = 0; i < cube.getBytesPerLayer(); ++i) {
+                shiftOut(plane[i], ShiftMode::MSB_FIRST);
+            }
+
+            dataReady();
+            wait(4);
+        }
+    }
 }
 
 void PigpioPainter::shiftOut(unsigned char data, ShiftMode shiftMode) const {
@@ -38,4 +53,8 @@ void PigpioPainter::dataReady() const {
 void PigpioPainter::initPaint() const {
     gpioWrite(OUTPUT_READY, 0);
     gpioWrite(CLOCK, 0);
+}
+
+void PigpioPainter::wait(int milliseconds) const {
+    gpioSleep(PI_TIME_RELATIVE, 0, milliseconds * 1000);
 }

@@ -1,3 +1,8 @@
+#ifndef __Painter_h__
+#define __Painter_h__
+
+#include "Cube.h"
+
 class Painter {
     public:
         enum ShiftMode {
@@ -5,32 +10,29 @@ class Painter {
             MSB_FIRST
         };
 
-        Painter(unsigned int sizeX, unsigned int sizeY, unsigned int sizeZ) : _sizeX(sizeX), _sizeY(sizeY), _sizeZ(sizeZ) {};
         virtual ~Painter() = default;
 
-        void paintCube(unsigned int layer, unsigned char* layerData, unsigned int size) const;
+        void paintCube(const Cube& cube, unsigned int frames = 1) const;
 
     protected:
         virtual void initPaint() const = 0;
         virtual void shiftOut(unsigned char data, ShiftMode shiftMode) const = 0;
         virtual void dataReady() const = 0;
+        virtual void wait(int milliseconds) const = 0;
 
         unsigned char getMaskForBit(unsigned int bit) const;
-
-    protected:
-        unsigned int _sizeX;
-        unsigned int _sizeY;
-        unsigned int _sizeZ;
+        unsigned char getNthBit(unsigned char byte, unsigned int n) const;
 };
 
 class PigpioPainter : public Painter {
     public:
-        PigpioPainter(unsigned int sizeX, unsigned int sizeY, unsigned int sizeZ, unsigned int outputReadyPin, unsigned int outputPin, unsigned int clockPin) : Painter(sizeX, sizeY, sizeZ), OUTPUT_READY(outputReadyPin), OUTPUT(outputPin), CLOCK(clockPin) {};
+        PigpioPainter(unsigned int outputReadyPin, unsigned int outputPin, unsigned int clockPin) : OUTPUT_READY(outputReadyPin), OUTPUT(outputPin), CLOCK(clockPin) {};
 
     protected:
         void initPaint() const override;
         void shiftOut(unsigned char data, ShiftMode shiftMode) const override;
         void dataReady() const override;
+        void wait(int milliseconds) const;
 
 
     private:
@@ -38,3 +40,5 @@ class PigpioPainter : public Painter {
         const unsigned int OUTPUT;
         const unsigned int CLOCK;
 };
+
+#endif

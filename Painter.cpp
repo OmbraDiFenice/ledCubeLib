@@ -2,28 +2,27 @@
 
 #include <pigpio.h>
 
-unsigned char Painter::setBit(unsigned int bit) const {
+unsigned char Painter::getMaskForBit(unsigned int bit) const {
     return 1 << bit;
 }
 
 void Painter::paintCube(unsigned int layer, unsigned char* layerData, unsigned int size) const {
-    unsigned char layerByte = setBit(layer);
+    unsigned char layerByte = getMaskForBit(layer);
 
     initPaint();
 
-    shiftOut(layerByte);
-    shiftOut(0xFF);
-    shiftOut(0xFF);
+    shiftOut(layerByte, ShiftMode::MSB_FIRST);
+    shiftOut(0xFF, ShiftMode::LSB_FIRST);
+    shiftOut(0xFF, ShiftMode::LSB_FIRST);
 
     dataReady();
 }
 
-void PigpioPainter::shiftOut(unsigned char data) const {
+void PigpioPainter::shiftOut(unsigned char data, ShiftMode shiftMode) const {
     gpioWrite(CLOCK, 0);
 
     for(int i = 0; i < 8; ++i) {
-        // LSB first
-        unsigned int bit = (data >> i) & 0x01;
+        unsigned int bit = (data >> (shiftMode == ShiftMode::LSB_FIRST ? i : (7 - i))) & 0x01;
 
         gpioWrite(OUTPUT, bit);
         gpioWrite(CLOCK, 1);
@@ -38,4 +37,5 @@ void PigpioPainter::dataReady() const {
 
 void PigpioPainter::initPaint() const {
     gpioWrite(OUTPUT_READY, 0);
+    gpioWrite(CLOCK, 0);
 }

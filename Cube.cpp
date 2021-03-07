@@ -1,6 +1,11 @@
 #include "Cube.h"
 
-#include <cstring>
+#ifdef ARDUINO
+	#include "string.h"
+#else
+	#include <cstring>
+	using std::memset;
+#endif
 
 Cube::Cube(unsigned int size) : _size(size) {
     _bytesPerLayer = (_size * _size) / 8;
@@ -14,7 +19,7 @@ Cube::~Cube() {
 }
 
 void Cube::clear() {
-    std::memset(_layers, 0, _size * _bytesPerLayer);
+    memset(_layers, 0, _size * _bytesPerLayer);
 }
 
 void Cube::setPixel(unsigned int x, unsigned int y, unsigned int z, bool value) {

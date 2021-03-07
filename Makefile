@@ -1,20 +1,10 @@
 LDLIBS=-lpigpio
 CXXFLAGS=-Wall -pthread -I.
 
-all: main
+all: raspi
 
-main: Cube.o Painter.o Animator.o pigpio/PigpioAnimator.o pigpio/PigpioPainter.o
-
-pigpio/PigpioPainter.o: Painter.o pigpio/PigpioPainter.cpp pigpio/PigpioPainter.h
-
-pigpio/PigpioAnimator.o: Animator.o pigpio/PigpioAnimator.cpp pigpio/PigpioAnimator.h
-
-Painter.o: Painter.cpp Painter.h
-
-Animator.o: Animator.cpp Animator.h
-
-Cube.o: Cube.cpp Cube.h
+raspi: raspi.cpp Cube.o Painter.o Animator.o pigpio/PigpioAnimator.o pigpio/PigpioPainter.o
 
 .PHONY: clean
 clean:
-	rm *.o main
+	rm *.o raspi

@@ -1,10 +1,10 @@
 LDLIBS=-lpigpio
-CXXFLAGS=-Wall -pthread -I.
+CXXFLAGS=-Wall -pthread -Isrc
 
 all: raspi
 
-raspi: raspi.cpp Cube.o Painter.o Animator.o Animations.o pigpio/PigpioAnimator.o pigpio/PigpioPainter.o
+raspi: raspi.cpp src/Cube.o src/Painter.o src/Animator.o src/Animations.o src/pigpio/PigpioAnimator.o src/pigpio/PigpioPainter.o
 
 .PHONY: clean
 clean:
-	rm *.o pigpio/*.o raspi
+	rm src/*.o src/pigpio/*.o raspi

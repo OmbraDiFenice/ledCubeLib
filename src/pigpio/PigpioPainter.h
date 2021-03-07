@@ -1,3 +1,4 @@
+#ifndef ARDUINO
 #ifndef __PigpioPainter_h__
 #define __PigpioPainter_h__
 
@@ -19,4 +20,5 @@ class PigpioPainter : public Painter {
         const unsigned int CLOCK;
 };
 
+#endif
 #endif

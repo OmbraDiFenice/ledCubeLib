@@ -1,3 +1,5 @@
+#ifndef ARDUINO
+
 #include <pigpio/PigpioAnimator.h>
 
 #include <pigpio.h>
@@ -20,3 +22,5 @@ PigpioAnimator::~PigpioAnimator() {
 const Painter& PigpioAnimator::getPainter() const {
     return _painter;
 }
+
+#endif

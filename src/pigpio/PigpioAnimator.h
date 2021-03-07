@@ -1,3 +1,4 @@
+#ifndef ARDUINO
 #ifndef __PigpioAnimator_h__
 #define __PigpioAnimator_h__
 
@@ -16,4 +17,5 @@ class PigpioAnimator : public Animator {
         PigpioPainter _painter;
 };
 
+#endif
 #endif

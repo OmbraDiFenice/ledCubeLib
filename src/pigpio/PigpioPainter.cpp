@@ -1,3 +1,5 @@
+#ifndef ARDUINO
+
 #include <pigpio/PigpioPainter.h>
 
 #include <pigpio.h>
@@ -27,3 +29,5 @@ void PigpioPainter::initPaint() const {
 void PigpioPainter::wait(int milliseconds) const {
     gpioSleep(PI_TIME_RELATIVE, 0, milliseconds * 1000);
 }
+
+#endif

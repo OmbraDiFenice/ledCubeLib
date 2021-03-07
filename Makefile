@@ -7,4 +7,4 @@ raspi: raspi.cpp Cube.o Painter.o Animator.o Animations.o pigpio/PigpioAnimator.
 
 .PHONY: clean
 clean:
-	rm *.o raspi
+	rm *.o pigpio/*.o raspi

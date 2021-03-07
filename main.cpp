@@ -1,11 +1,7 @@
-#include <pigpio.h>
-#include <iostream>
-#include "Painter.h"
-#include "Cube.h"
-
-#define CLOCK_PIN 18
-#define LED_OUT_PIN 15
-#define LED_READY_PIN 14
+#include <Cube.h>
+#include <Painter.h>
+#include <Animator.h>
+#include <pigpio/PigpioAnimator.h>
 
 void scrollRows(const Painter& painter, Cube& cube) {
         for(unsigned int z = 0; z < 4; ++z) { 
@@ -31,26 +27,11 @@ void scrollPlanes(const Painter& painter, Cube& cube) {
 }
 
 int main(int argc, char** argv) {
-    int version = gpioInitialise();
-    if(version == PI_INIT_FAILED) {
-        std::cerr << "error initialising pigpio" << std::endl;
-        return version;
-    }
-
-    gpioSetMode(LED_READY_PIN, PI_OUTPUT);
-    gpioSetMode(LED_OUT_PIN, PI_OUTPUT);
-    gpioSetMode(CLOCK_PIN, PI_OUTPUT);
-
-    const Painter& painter = PigpioPainter(LED_READY_PIN, LED_OUT_PIN, CLOCK_PIN);
+    const Animator& animator = PigpioAnimator();
 
     Cube cube(4);
 
     while(true) {
-        scrollRows(painter, cube);
+        animator.play(scrollPlanes, cube);
     }
-
-    cube.clear();
-    painter.paintCube(cube);
-
-    gpioTerminate();
 }

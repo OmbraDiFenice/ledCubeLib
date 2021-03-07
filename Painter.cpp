@@ -26,7 +26,7 @@ void Painter::paintCube(const Cube& cube, unsigned int frames) const {
             }
 
             dataReady();
-            wait(4);
+            //wait(4);
         }
     }
 }

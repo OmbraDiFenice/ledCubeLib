@@ -14,7 +14,7 @@ void Painter::paintCube(const Cube& cube, unsigned int frames) const {
     const unsigned char* plane;
 
     for(unsigned int frame = 0; frame < frames; ++frame) {
-        for(unsigned int z = 0; z < cube.getSize(); ++z) {
+        for(unsigned int z = 0; z < cube.getSide(); ++z) {
             plane = cube.getLayer(z);
             
             // layer selection

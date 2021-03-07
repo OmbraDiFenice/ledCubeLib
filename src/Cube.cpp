@@ -7,10 +7,11 @@
 	using std::memset;
 #endif
 
-Cube::Cube(unsigned int size) : _size(size) {
-    _bytesPerLayer = (_size * _size) / 8;
-    _linesPerByte = 8 / _size;
-    _layers = new unsigned char[_size * _bytesPerLayer]; 
+Cube::Cube(unsigned int side) : _side(side) {
+    _bytesPerLayer = (_side * _side) / 8;
+    _linesPerByte = 8 / _side;
+    _size = _side * _bytesPerLayer;
+    _layers = new unsigned char[_size]; 
     clear();
 };
 
@@ -19,13 +20,13 @@ Cube::~Cube() {
 }
 
 void Cube::clear() {
-    memset(_layers, 0, _size * _bytesPerLayer);
+    memset(_layers, 0, _size);
 }
 
 void Cube::setPixel(unsigned int x, unsigned int y, unsigned int z, bool value) {
     unsigned char* layer = &_layers[z * _bytesPerLayer];
     unsigned char mask = 1 << x;
-    if(y % _linesPerByte == 0) mask <<= _size;
+    if(y % _linesPerByte == 0) mask <<= _side;
     if(value) {
         layer[y / _linesPerByte] |= mask;
     } else {

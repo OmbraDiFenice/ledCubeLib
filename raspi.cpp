@@ -1,19 +1,21 @@
-#include <Animator.h>
-#include <Animations.h>
 #include <Cube.h>
-#include <Painter.h>
-#include <pigpio/PigpioAnimator.h>
-
-#define LED_READY_PIN 14
-#define LED_OUT_PIN 15
-#define CLOCK_PIN 18
+#include <pigpio.h>
 
 int main(int argc, char** argv) {
-    const Animator& animator = PigpioAnimator(LED_READY_PIN, LED_OUT_PIN, CLOCK_PIN);
+    if(gpioInitialise() < 0) return 1;
 
     Cube cube(4);
+    int serialHandler = serOpen(argv[1], 115200, 0);
 
-    while(true) {
-        animator.play(scrollPlanes, cube);
+    for(unsigned int z = 0; z < 4; ++z) { 
+        for(unsigned int y = 0; y < 4; ++y) { 
+            for(unsigned int x = 0; x < 4; ++x) { 
+                cube.setPixel(x, y, z, true);
+                serWrite(serialHandler, reinterpret_cast<char*>(cube.getBuffer()), cube.getSize());
+                gpioDelay(10000);
+            }
+        }
     }
+
+    return 0;
 }

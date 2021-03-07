@@ -3,6 +3,10 @@
 #include <Animator.h>
 #include <pigpio/PigpioAnimator.h>
 
+#define LED_READY_PIN 14
+#define LED_OUT_PIN 15
+#define CLOCK_PIN 18
+
 void scrollRows(const Painter& painter, Cube& cube) {
         for(unsigned int z = 0; z < 4; ++z) { 
             for(unsigned int y = 0; y < 4; ++y) { 
@@ -27,7 +31,7 @@ void scrollPlanes(const Painter& painter, Cube& cube) {
 }
 
 int main(int argc, char** argv) {
-    const Animator& animator = PigpioAnimator();
+    const Animator& animator = PigpioAnimator(LED_READY_PIN, LED_OUT_PIN, CLOCK_PIN);
 
     Cube cube(4);
 

@@ -4,13 +4,9 @@
 #include <Animator.h>
 #include <pigpio/PigpioPainter.h>
 
-#define CLOCK_PIN 18
-#define LED_OUT_PIN 15
-#define LED_READY_PIN 14
-
 class PigpioAnimator : public Animator {
     public:
-        PigpioAnimator();
+        PigpioAnimator(unsigned int outputReadyPin, unsigned int outputPin, unsigned int clockPin);
         ~PigpioAnimator();
 
     protected:

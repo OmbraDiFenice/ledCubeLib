@@ -2,15 +2,15 @@
 
 #include <pigpio.h>
 
-PigpioAnimator::PigpioAnimator() : _painter(LED_READY_PIN, LED_OUT_PIN, CLOCK_PIN) {
+PigpioAnimator::PigpioAnimator(unsigned int outputReadyPin, unsigned int outputPin, unsigned int clockPin) : _painter(outputReadyPin, outputPin, clockPin) {
     int version = gpioInitialise();
     if(version == PI_INIT_FAILED) {
         throw "error initialising pigpio";
     }
 
-    gpioSetMode(LED_READY_PIN, PI_OUTPUT);
-    gpioSetMode(LED_OUT_PIN, PI_OUTPUT);
-    gpioSetMode(CLOCK_PIN, PI_OUTPUT);
+    gpioSetMode(outputReadyPin, PI_OUTPUT);
+    gpioSetMode(outputPin, PI_OUTPUT);
+    gpioSetMode(clockPin, PI_OUTPUT);
 }
 
 PigpioAnimator::~PigpioAnimator() {

@@ -5,8 +5,6 @@
 #include <pigpio.h>
 
 void PigpioPainter::shiftOut(unsigned char data, ShiftMode shiftMode) const {
-    gpioWrite(CLOCK, 0);
-
     for(int i = 0; i < 8; ++i) {
         unsigned int bit = (data >> (shiftMode == ShiftMode::LSB_FIRST ? i : (7 - i))) & 0x01;
 

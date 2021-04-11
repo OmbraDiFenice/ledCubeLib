@@ -2,9 +2,12 @@
 #include "Cube.h"
 
 #ifdef ARDUINO
-#include <stdlib.h>
+    #include <stdlib.h>
+    #include <string.h>
 #else
-#include <cstdio>
+    #include <cstdio>
+    #include <cstring>
+	using std::memcpy;
 #endif
 
 class TestCube : public Test {
@@ -32,6 +35,16 @@ void TestCube::testSetPixel(unsigned int x, unsigned int y, unsigned int z, unsi
     sprintf(errMsg, "error on x = %d, y = %d, z = %d - got %02X, expected: %02X", x, y, z, *actual, expected);
     ASSERT(*actual == expected, errMsg);
     cube.setPixel(x, y, z, false);
+}
+
+TEST(TestCube, copy) {
+    Cube other(cube);
+
+    ASSERT(other.getSize() == cube.getSize(), "sizes should match");
+    ASSERT(other.getSide() == cube.getSide(), "sides should match");
+    for(unsigned int i = 0; i < cube.getSize(); ++i) {
+        ASSERT(other.getBuffer()[i] == cube.getBuffer()[i], "copy should be equal to original");
+    }
 }
 
 TEST(TestCube, getSide) {
@@ -232,6 +245,146 @@ TEST(TestCube, setPixel) {
     testSetPixel(1, 3, 3, &buf[7], 0b00000010);
     testSetPixel(2, 3, 3, &buf[7], 0b00000100);
     testSetPixel(3, 3, 3, &buf[7], 0b00001000);
+}
+
+TEST(TestCube, shiftLayers_input0) {
+    unsigned char copy[cube.getSize()];
+    cube.setLayer(1, true);
+    memcpy(copy, cube.getBuffer(), cube.getSize());
+
+    for(unsigned int i = 0; i < cube.getSize(); ++i) {
+        ASSERT(cube.getBuffer()[i] == copy[i], "cube should not change");
+    }
+}
+
+TEST(TestCube, shiftLayers_down_equalSide) {
+    cube.setLayer(cube.getSide()-1, true);
+    cube.shiftLayers(-4);
+
+    ASSERT(isCleared(cube), "cube should be cleared");
+}
+
+TEST(TestCube, shiftLayers_down_moreThanSide) {
+    cube.setLayer(cube.getSide()-1, true);
+    cube.shiftLayers(-10);
+
+    ASSERT(isCleared(cube), "cube should be cleared");
+}
+
+TEST(TestCube, shiftLayers_down1) {
+    cube.setLayer(cube.getSide()-1, true);
+    cube.shiftLayers(-1);
+
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-1)[0], "original layer not emptied");
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-1)[1], "original layer not emptied");
+
+    ASSERT(0xFF == cube.getLayer(cube.getSide()-2)[0], "destination layer not set");
+    ASSERT(0xFF == cube.getLayer(cube.getSide()-2)[1], "destination layer not set");
+
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-3)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-3)[1], "other layer not empty");
+
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-4)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-4)[1], "other layer not empty");
+}
+
+TEST(TestCube, shiftLayers_down2) {
+    cube.setLayer(cube.getSide()-1, true);
+    cube.shiftLayers(-2);
+
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-1)[0], "original layer not emptied");
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-1)[1], "original layer not emptied");
+
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-2)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-2)[1], "other layer not empty");
+
+    ASSERT(0xFF == cube.getLayer(cube.getSide()-3)[0], "destination layer not set");
+    ASSERT(0xFF == cube.getLayer(cube.getSide()-3)[1], "destination layer not set");
+
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-4)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-4)[1], "other layer not empty");
+}
+
+TEST(TestCube, shiftLayers_down3) {
+    cube.setLayer(cube.getSide()-1, true);
+    cube.shiftLayers(-3);
+
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-1)[0], "original layer not emptied");
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-1)[1], "original layer not emptied");
+
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-2)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-2)[1], "other layer not empty");
+
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-3)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(cube.getSide()-3)[1], "other layer not empty");
+
+    ASSERT(0xFF == cube.getLayer(cube.getSide()-4)[0], "destination layer not set");
+    ASSERT(0xFF == cube.getLayer(cube.getSide()-4)[1], "destination layer not set");
+}
+
+TEST(TestCube, shiftLayers_up_equalSide) {
+    cube.setLayer(0, true);
+    cube.shiftLayers(4);
+
+    ASSERT(isCleared(cube), "cube should be cleared");
+}
+
+TEST(TestCube, shiftLayers_up_moreThanSide) {
+    cube.setLayer(0, true);
+    cube.shiftLayers(10);
+
+    ASSERT(isCleared(cube), "cube should be cleared");
+}
+
+TEST(TestCube, shiftLayers_up1) {
+    cube.setLayer(0, true);
+    cube.shiftLayers(1);
+
+    ASSERT(0x00 == cube.getLayer(0)[0], "original layer not emptied");
+    ASSERT(0x00 == cube.getLayer(0)[1], "original layer not emptied");
+
+    ASSERT(0xFF == cube.getLayer(1)[0], "destination layer not set");
+    ASSERT(0xFF == cube.getLayer(1)[1], "destination layer not set");
+
+    ASSERT(0x00 == cube.getLayer(2)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(2)[1], "other layer not empty");
+
+    ASSERT(0x00 == cube.getLayer(3)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(3)[1], "other layer not empty");
+}
+
+TEST(TestCube, shiftLayers_up2) {
+    cube.setLayer(0, true);
+    cube.shiftLayers(2);
+
+    ASSERT(0x00 == cube.getLayer(0)[0], "original layer not emptied");
+    ASSERT(0x00 == cube.getLayer(0)[1], "original layer not emptied");
+
+    ASSERT(0x00 == cube.getLayer(1)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(1)[1], "other layer not empty");
+
+    ASSERT(0xFF == cube.getLayer(2)[0], "destination layer not set");
+    ASSERT(0xFF == cube.getLayer(2)[1], "destination layer not set");
+
+    ASSERT(0x00 == cube.getLayer(3)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(3)[1], "other layer not empty");
+}
+
+TEST(TestCube, shiftLayers_up3) {
+    cube.setLayer(0, true);
+    cube.shiftLayers(3);
+
+    ASSERT(0x00 == cube.getLayer(0)[0], "original layer not emptied");
+    ASSERT(0x00 == cube.getLayer(0)[1], "original layer not emptied");
+
+    ASSERT(0x00 == cube.getLayer(1)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(1)[1], "other layer not empty");
+
+    ASSERT(0x00 == cube.getLayer(2)[0], "other layer not empty");
+    ASSERT(0x00 == cube.getLayer(2)[1], "other layer not empty");
+
+    ASSERT(0xFF == cube.getLayer(3)[0], "destination layer not set");
+    ASSERT(0xFF == cube.getLayer(3)[1], "destination layer not set");
 }
 
 void testCube() {

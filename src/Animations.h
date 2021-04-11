@@ -6,6 +6,6 @@
 
 void scrollRows(const Painter& painter, Cube& cube);
 
-void scrollPlanes(const Painter& painter, Cube& cube);
+void scrollPlaneZ(const Painter& painter, Cube& cube);
 
 #endif

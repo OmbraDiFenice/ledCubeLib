@@ -3,25 +3,34 @@
 #include <Cube.h>
 
 void scrollRows(const Painter& painter, Cube& cube) {
-        for(unsigned int z = 0; z < 4; ++z) { 
-            for(unsigned int y = 0; y < 4; ++y) { 
-                for(unsigned int x = 0; x < 4; ++x) { 
+        for(unsigned int z = 0; z < cube.getSide(); ++z) {
+            for(unsigned int y = 0; y < cube.getSide(); ++y) {
+                for(unsigned int x = 0; x < cube.getSide(); ++x) {
                     cube.setPixel(x, y, z, true);
-                    painter.paintCube(cube, 50);
+                    painter.paintCube(cube, 5);
                 }
             }
         }
-        cube.clear();
-        painter.paintCube(cube);
+        for(int z = cube.getSide()-1; z >= 0; --z) {
+            for(int y = cube.getSide()-1; y >= 0; --y) {
+                for(int x = cube.getSide()-1; x >= 0; --x) {
+                    cube.setPixel(x, y, z, false);
+                    painter.paintCube(cube, 4);
+                }
+            }
+        }
 }
 
-void scrollPlanes(const Painter& painter, Cube& cube) {
-        for(unsigned int z = 0; z < 4; ++z) {
+void scrollPlaneZ(const Painter& painter, Cube& cube) {
+        for(unsigned int z = 0; z < cube.getSide(); ++z) {
             cube.setLayer(z, true);
-            painter.paintCube(cube, 150);
+            painter.paintCube(cube, 4);
             cube.setLayer(z, false);
         }
-        cube.clear();
-        painter.paintCube(cube);
+        for(unsigned int z = cube.getSide()-2; z > 0; --z) {
+            cube.setLayer(z, true);
+            painter.paintCube(cube, 4);
+            cube.setLayer(z, false);
+        }
 }
 

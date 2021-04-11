@@ -1,7 +1,8 @@
-#include "tests/TestCube.h"
+#include "tests/Testing.h"
 
 int main(int argc, char** argv) {
-    testCube();
+    Test testSuite;
+    testSuite.run();
 
     return 0;
 }

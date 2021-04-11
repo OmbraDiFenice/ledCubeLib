@@ -1,5 +1,4 @@
-#include "Testing.h"
-#include "Cube.h"
+#include "TestCube.h"
 
 #ifdef ARDUINO
     #include <stdlib.h>
@@ -9,17 +8,6 @@
     #include <cstring>
 	using std::memcpy;
 #endif
-
-class TestCube : public Test {
-    public:
-        TestCube() : cube(4) {};
-
-    protected:
-        bool isCleared(Cube& cube);
-        void testSetPixel(unsigned int x, unsigned int y, unsigned int z, unsigned char *actual, unsigned char expected);
-
-        Cube cube;
-};
 
 bool TestCube::isCleared(Cube& cube) {
     unsigned char * buf = cube.getBuffer();
@@ -387,7 +375,90 @@ TEST(TestCube, shiftLayers_up3) {
     ASSERT(0xFF == cube.getLayer(3)[1], "destination layer not set");
 }
 
-void testCube() {
-    TestCube suite;
-    suite.run();
+TEST(TestCube, getPixel) {
+    cube.setPixel(0, 0, 0, true);
+
+    // layer 0
+    ASSERT( cube.getPixel(0, 0, 0), "pixel should be set");
+    ASSERT(!cube.getPixel(1, 0, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 0, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 0, 0), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 1, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 1, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 1, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 1, 0), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 2, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 2, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 2, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 2, 0), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 3, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 3, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 3, 0), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 3, 0), "pixel should not be set");
+
+    // layer 1
+    ASSERT(!cube.getPixel(0, 0, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 0, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 0, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 0, 1), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 1, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 1, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 1, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 1, 1), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 2, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 2, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 2, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 2, 1), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 3, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 3, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 3, 1), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 3, 1), "pixel should not be set");
+
+    // layer 2
+    ASSERT(!cube.getPixel(0, 0, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 0, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 0, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 0, 2), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 1, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 1, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 1, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 1, 2), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 2, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 2, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 2, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 2, 2), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 3, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 3, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 3, 2), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 3, 2), "pixel should not be set");
+
+    // layer 3
+    ASSERT(!cube.getPixel(0, 0, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 0, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 0, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 0, 3), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 1, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 1, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 1, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 1, 3), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 2, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 2, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 2, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 2, 3), "pixel should not be set");
+
+    ASSERT(!cube.getPixel(0, 3, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(1, 3, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(2, 3, 3), "pixel should not be set");
+    ASSERT(!cube.getPixel(3, 3, 3), "pixel should not be set");
 }

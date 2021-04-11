@@ -70,3 +70,10 @@ void Cube::shiftLayers(int amount) {
     unsigned char * clearFrom = amount < 0 ? findLayer(_side - absAmount) : findLayer(0);
     memset(clearFrom, 0, _bytesPerLayer * absAmount);
 }
+
+bool Cube::getPixel(unsigned int x, unsigned int y, unsigned int z) const {
+    unsigned char* layer = &_layers[z * _bytesPerLayer];
+    unsigned char mask = 1 << x;
+    if(y % _linesPerByte == 0) mask <<= _side;
+    return (layer[y / _linesPerByte] & mask) != 0;
+}

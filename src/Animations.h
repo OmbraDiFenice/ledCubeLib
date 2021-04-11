@@ -3,13 +3,40 @@
 
 #include <Cube.h>
 #include <Painter.h>
+#include <Animation.h>
 
-void fixed(const Painter& painter, Cube& cube);
+class Fixed : public Animation {
+    public:
+        Fixed() : Animation("fixed") {};
+        void run(const Painter& painter, Cube& cube) override;
+};
 
-void scrollRows(const Painter& painter, Cube& cube);
+class ScrollRows : public Animation {
+    public:
+        ScrollRows() : Animation("scrollRows") {};
+        void run(const Painter& painter, Cube& cube) override;
+};
 
-void scrollPlaneZ(const Painter& painter, Cube& cube);
+class ScrollPlaneZ : public Animation {
+    public:
+        ScrollPlaneZ() : Animation("scrollPlaneZ") {};
+        void run(const Painter& painter, Cube& cube) override;
+};
 
-void rain(const Painter& painter, Cube& cube);
+class Rain : public Animation {
+    public:
+        Rain() : Animation("rain") {};
+        void run(const Painter& painter, Cube& cube) override;
+};
+
+class RandomShift : public Animation {
+    public:
+        RandomShift() : Animation("randomShift") {};
+        void run(const Painter& painter, Cube& cube) override;
+
+    private:
+        void shiftUp(unsigned int x, unsigned int y, const Painter& painter, Cube& cube);
+        void shiftDown(unsigned int x, unsigned int y, const Painter& painter, Cube& cube);
+};
 
 #endif

@@ -1,8 +1,8 @@
 #ifndef __TESTCUBE_H__
 #define __TESTCUBE_H__
 
-#include "Testing.h"
-#include "Cube.h"
+#include <Testing.h>
+#include <Cube.h>
 
 class TestCube : public Test {
     public:

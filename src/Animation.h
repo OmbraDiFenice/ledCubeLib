@@ -1,7 +1,7 @@
 #ifndef __ANIMATION_H__
 #define __ANIMATION_H__
 
-#include <MyString.h>
+#include <util/MyString.h>
 #include <Painter.h>
 
 class Animation {

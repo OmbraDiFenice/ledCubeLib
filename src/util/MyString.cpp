@@ -1,4 +1,4 @@
-#include <MyString.h>
+#include <util/MyString.h>
 
 #ifdef ARDUINO
     #include <string.h>

@@ -7,6 +7,7 @@
 class Animation {
     public:
         Animation(const MyString& name) : _name(name) {};
+        virtual ~Animation() = default;
         virtual void run(const Painter& painter, Cube& cube) = 0;
         const MyString& getName() const;
 

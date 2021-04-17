@@ -4,6 +4,7 @@
 #include <Cube.h>
 #include <Painter.h>
 #include <Animation.h>
+#include <AnimationRegistry.h>
 
 class Fixed : public Animation {
     public:

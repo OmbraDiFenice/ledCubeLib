@@ -1,7 +1,7 @@
 #include <util/TestVector.h>
 
 TEST(TestVector, startEmpty) {
-    ASSERT(1u == vec.capacity(), "incorrect capacity");
+    ASSERT(0u == vec.capacity(), "incorrect capacity");
     ASSERT(0u == vec.size(), "incorrect size");
 }
 

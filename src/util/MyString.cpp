@@ -5,6 +5,8 @@
 #else
     #include <cstring>
     using std::strcpy;
+    using std::strcmp;
+    using std::memcpy;
 #endif
 
 MyString::MyString() {
@@ -29,10 +31,24 @@ MyString::~MyString() {
     delete _buf;
 }
 
-char* MyString::get() {
+char* MyString::get() const {
     return _buf;
 }
 
 unsigned int MyString::length() {
     return _len;
+}
+
+bool MyString::operator==(const MyString& other) const {
+    return strcmp(_buf, other._buf) == 0;
+}
+
+MyString& MyString::append(const MyString& other) {
+    char* tmp = new char[_len + other._len + 1];
+    memcpy(tmp, _buf, _len);
+    delete _buf;
+    memcpy(&tmp[_len], other._buf, other._len + 1);
+    _len = _len + other._len;
+    _buf = tmp;
+    return *this;
 }

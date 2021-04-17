@@ -8,8 +8,13 @@ class MyString {
         MyString(const MyString& other);
         ~MyString();
 
-        char* get();
+        char* get() const;
         unsigned int length();
+        
+        MyString& append(const MyString& other);
+
+        bool operator==(const MyString& other) const;
+        inline bool operator!=(const MyString& other) const { return !(*this == other); };
 
     private:
         char* _buf;

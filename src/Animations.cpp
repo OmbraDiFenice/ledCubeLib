@@ -12,6 +12,7 @@
 void Fixed::run(const Painter& painter, Cube& cube) {
     painter.paintCube(cube);
 }
+REGISTER(Fixed);
 
 void ScrollRows::run(const Painter& painter, Cube& cube) {
     for(unsigned int z = 0; z < cube.getSide(); ++z) {
@@ -31,6 +32,7 @@ void ScrollRows::run(const Painter& painter, Cube& cube) {
         }
     }
 }
+REGISTER(ScrollRows);
 
 void ScrollPlaneZ::run(const Painter& painter, Cube& cube) {
     for(unsigned int z = 0; z < cube.getSide(); ++z) {
@@ -44,20 +46,18 @@ void ScrollPlaneZ::run(const Painter& painter, Cube& cube) {
         cube.setLayer(z, false);
     }
 }
+REGISTER(ScrollPlaneZ);
 
 void Rain::run(const Painter& painter, Cube& cube) {
-    static unsigned int counter = 0;
-
     cube.shiftLayers(-1);
 
-    if((++counter) % 2 == 0) {    
-        cube.setPixel(rand() % cube.getSide(), rand() % cube.getSide(), cube.getSide()-1, true);
-        cube.setPixel(rand() % cube.getSide(), rand() % cube.getSide(), cube.getSide()-1, true);
-        cube.setPixel(rand() % cube.getSide(), rand() % cube.getSide(), cube.getSide()-1, true);
-    }
+    cube.setPixel(rand() % cube.getSide(), rand() % cube.getSide(), cube.getSide()-1, true);
+    cube.setPixel(rand() % cube.getSide(), rand() % cube.getSide(), cube.getSide()-1, true);
+    cube.setPixel(rand() % cube.getSide(), rand() % cube.getSide(), cube.getSide()-1, true);
 
     painter.paintCube(cube, 4);
 }
+REGISTER(Rain);
 
 void RandomShift::run(const Painter& painter, Cube& cube) {
     unsigned int x = rand() % cube.getSide();
@@ -86,3 +86,4 @@ void RandomShift::shiftDown(unsigned int x, unsigned int y, const Painter& paint
         painter.paintCube(cube);
     }
 }
+REGISTER(RandomShift);

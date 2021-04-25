@@ -87,3 +87,49 @@ void RandomShift::shiftDown(unsigned int x, unsigned int y, const Painter& paint
     }
 }
 REGISTER(RandomShift);
+
+void Snake::run(const Painter& painter, Cube& cube) {
+    cube.setPixel(_snake[_tail].x, _snake[_tail].y, _snake[_tail].z, false);
+    _tail = (_tail + 1) % _length;
+
+    unsigned int currentHead = _head;
+    _head = (_head + 1) % _length;
+    _snake[_head] = findNext(cube, _snake[currentHead]);
+    cube.setPixel(_snake[_head].x, _snake[_head].y, _snake[_head].z, true);
+
+    painter.paintCube(cube, 5);
+}
+
+void Snake::init(Cube& cube) {
+    _head = _length-1;
+    _tail = 0;
+    cube.clear();
+    for(unsigned int i = 0; i < _length; ++i) {
+        _snake[i].x = i;
+    }
+    cube.setPixel(_snake[_head].x, _snake[_head].y, _snake[_head].z, true);
+};
+
+Snake::Point Snake::findNext(Cube& cube, const Point& currentHead) const {
+    Point next = currentHead;
+
+    static int offset[] = { 1, -1 };
+    int* point = (int*)(&next);
+
+    while(!isValidNext(next, cube)) {
+        next = currentHead;
+        int coordinateIndex = rand() % 3;
+        int offsetIndex = rand() % 2;
+        point[coordinateIndex] += offset[offsetIndex];
+    }
+
+    return next;
+}
+
+bool Snake::isValidNext(const Snake::Point& candidateNext, const Cube& cube) const {
+    return candidateNext.x >= 0 && candidateNext.x < cube.getSide()
+        && candidateNext.y >= 0 && candidateNext.y < cube.getSide()
+        && candidateNext.z >= 0 && candidateNext.z < cube.getSide()
+        && !cube.getPixel(candidateNext.x, candidateNext.y, candidateNext.z);
+}
+REGISTER(Snake);

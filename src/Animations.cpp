@@ -59,6 +59,11 @@ void Rain::run(const Painter& painter, Cube& cube) {
 }
 REGISTER(Rain);
 
+void RandomShift::init(Cube& cube) {
+    cube.clear();
+    cube.setLayer(0, true);
+}
+
 void RandomShift::run(const Painter& painter, Cube& cube) {
     unsigned int x = rand() % cube.getSide();
     unsigned int y = rand() % cube.getSide();

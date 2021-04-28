@@ -34,6 +34,7 @@ class RandomShift : public Animation {
     public:
         RandomShift() : Animation("randomShift") {};
         void run(const Painter& painter, Cube& cube) override;
+        void init(Cube& cube) override;
 
     private:
         void shiftUp(unsigned int x, unsigned int y, const Painter& painter, Cube& cube);

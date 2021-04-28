@@ -9,7 +9,7 @@ class Animation {
         Animation(const MyString& name) : _name(name) {};
         virtual ~Animation() = default;
         virtual void run(const Painter& painter, Cube& cube) = 0;
-        virtual void init(Cube& cube) {};
+        virtual void init(Cube& cube);
         const MyString& getName() const;
 
     protected:

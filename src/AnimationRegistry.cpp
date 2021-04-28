@@ -28,7 +28,7 @@ Animation* AnimationRegistry::getByName(const MyString& name) {
 
 MyString AnimationRegistry::toString() {
     MyString out;
-    char* buf = new char[_animations.size()];
+    char* buf = new char[3];
     for(unsigned int i = 0; i < _animations.size(); ++i) {
         sprintf(buf, "%d", i);
         out.append(buf);

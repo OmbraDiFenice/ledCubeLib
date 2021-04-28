@@ -138,3 +138,35 @@ bool Snake::isValidNext(const Snake::Point& candidateNext, const Cube& cube) con
         && !cube.getPixel(candidateNext.x, candidateNext.y, candidateNext.z);
 }
 REGISTER(Snake);
+
+const Spin::Point Spin::position[] = {
+    {1, 0}, {2, 0},
+    {3, 1}, {3, 2},
+    {2, 3}, {1, 3},
+    {0, 2}, {0, 1}
+};
+
+void Spin::run(const Painter& painter, Cube& cube) {
+    cube.setPixel(position[i].x, position[i].y, z, false);
+
+    unsigned int deltaZ = (i + 1) / len;
+    if(z == cube.getSide() - 1) direction = Direction::DOWN;
+    if(z == 0) direction = Direction::UP;
+
+    if(direction == Direction::UP) {
+        z += deltaZ;
+    } else {
+        z -= deltaZ;
+    }
+    i = (i + 1) % len;
+    cube.setPixel(position[i].x, position[i].y, z, true);
+    painter.paintCube(cube, 2);
+}
+
+void Spin::init(Cube& cube) {
+    cube.clear();
+    i = 0;
+    z = 0;
+    direction = Direction::UP;
+}
+REGISTER(Spin);

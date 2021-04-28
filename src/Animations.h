@@ -60,4 +60,24 @@ class Snake : public Animation {
         unsigned int _tail;
 };
 
+class Spin : public Animation {
+    public:
+        Spin() : Animation("spin") {};
+        void run(const Painter& painter, Cube& cube) override;
+        void init(Cube& cube) override;
+
+    public:
+        struct Point { unsigned int x; unsigned int y; };
+
+    private:
+        enum Direction { UP, DOWN };
+
+    private:
+        static constexpr unsigned int len = 8;
+        static const Point position[len];
+        unsigned int i;
+        unsigned int z;
+        Direction direction;
+};
+
 #endif

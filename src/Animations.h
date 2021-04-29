@@ -70,7 +70,7 @@ class Spin : public Animation {
         struct Point { unsigned int x; unsigned int y; };
 
     private:
-        enum Direction { UP, DOWN };
+        enum Direction { UP = 1, DOWN = -1 };
 
     private:
         static constexpr unsigned int len = 8;
@@ -78,6 +78,21 @@ class Spin : public Animation {
         unsigned int i;
         unsigned int z;
         Direction direction;
+};
+
+class Waves : public Animation {
+    public:
+        Waves() : Animation("waves"), direction(nullptr) {};
+        ~Waves();
+        void run(const Painter& painter, Cube& cube) override;
+        void init(Cube& cube) override;
+
+    private:
+        unsigned int findZ(unsigned int x, Cube& cube) const;
+        void moveLine(unsigned int x, unsigned int currentZ, unsigned int newZ, Cube& cube);
+
+    private:
+        int *direction;
 };
 
 #endif

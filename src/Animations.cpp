@@ -7,6 +7,7 @@
 #else
     #include <cstdlib>
     using std::rand;
+	using std::memset;
 #endif
 
 void Fixed::run(const Painter& painter, Cube& cube) {
@@ -153,11 +154,8 @@ void Spin::run(const Painter& painter, Cube& cube) {
     if(z == cube.getSide() - 1) direction = Direction::DOWN;
     if(z == 0) direction = Direction::UP;
 
-    if(direction == Direction::UP) {
-        z += deltaZ;
-    } else {
-        z -= deltaZ;
-    }
+    z += deltaZ * direction;
+
     i = (i + 1) % len;
     cube.setPixel(position[i].x, position[i].y, z, true);
     painter.paintCube(cube, 2);
@@ -170,3 +168,54 @@ void Spin::init(Cube& cube) {
     direction = Direction::UP;
 }
 REGISTER(Spin);
+
+Waves::~Waves() {
+    delete[] direction;
+    direction = nullptr;
+}
+
+void Waves::run(const Painter& painter, Cube& cube) {
+    unsigned int z;
+    for(unsigned int x = 0; x < cube.getSide(); ++x) {
+        z = findZ(x, cube);
+        if(direction[x] != 0) {
+            if(z == cube.getSide() - 1 || z == 0) {
+                direction[x] = 0;
+            }
+        }
+        else {
+            if(z == cube.getSide() - 1) {
+                direction[x] = -1;
+            } else if(z == 0) {
+                direction[x] = 1;
+            }
+        }
+        moveLine(x, z, z + direction[x], cube);
+    }
+    painter.paintCube(cube, 5);
+}
+
+unsigned int Waves::findZ(unsigned int x, Cube& cube) const {
+    for(unsigned int z = 0; z < cube.getSide(); ++z) {
+        if(cube.getPixel(x, 0, z)) return z;
+    }
+}
+
+void Waves::moveLine(unsigned int x, unsigned int currentZ, unsigned int newZ, Cube& cube) {
+    for(unsigned int y = 0; y < cube.getSide(); ++y) {
+        cube.setPixel(x, y, currentZ, false);
+        cube.setPixel(x, y, newZ, true);
+    }
+}
+
+void Waves::init(Cube& cube) {
+    cube.clear();
+    if(direction == nullptr) direction = new int[cube.getSide()];
+    for(unsigned int x = 0; x < cube.getSide(); ++x) {
+        direction[x] = 1;
+        for(unsigned int y = 0; y < cube.getSide(); ++y) {
+            cube.setPixel(x, y, x, true);
+        }
+    }
+}
+REGISTER(Waves);

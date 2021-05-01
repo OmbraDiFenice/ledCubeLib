@@ -10,6 +10,7 @@ class Cube {
         void clear();
         void setPixel(unsigned int x, unsigned int y, unsigned int z, bool value);
         bool getPixel(unsigned int x, unsigned int y, unsigned int z) const;
+        void togglePixel(unsigned int x, unsigned int y, unsigned int z);
         void setLayer(unsigned int z, bool value);
         void shiftLayers(int amount = 1);
 

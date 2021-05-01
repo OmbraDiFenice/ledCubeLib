@@ -462,3 +462,17 @@ TEST(TestCube, getPixel) {
     ASSERT(!cube.getPixel(2, 3, 3), "pixel should not be set");
     ASSERT(!cube.getPixel(3, 3, 3), "pixel should not be set");
 }
+
+TEST(TestCube, togglePixel_whenSet) {
+    cube.setPixel(0,1,2, true);
+    ASSERT(cube.getPixel(0, 1, 2) == true, "setup failed: should be set");
+    cube.togglePixel(0, 1, 2);
+    ASSERT(cube.getPixel(0, 1, 2) == false, "should be unset");
+}
+
+TEST(TestCube, togglePixel_whenNotSet) {
+    cube.setPixel(0,1,2, false);
+    ASSERT(cube.getPixel(0, 1, 2) == false, "setup failed: should be unset");
+    cube.togglePixel(0, 1, 2);
+    ASSERT(cube.getPixel(0, 1, 2) == true, "should be set");
+}

@@ -47,6 +47,18 @@ void Cube::setPixel(unsigned int x, unsigned int y, unsigned int z, bool value) 
     }
 }
 
+void Cube::togglePixel(unsigned int x, unsigned int y, unsigned int z) {
+    unsigned char* layer = &_layers[z * _bytesPerLayer];
+    unsigned char mask = 1 << x;
+    if(y % _linesPerByte == 0) mask <<= _side;
+    bool isSet = (layer[y / _linesPerByte] & mask) != 0;
+    if(!isSet) {
+        layer[y / _linesPerByte] |= mask;
+    } else {
+        layer[y / _linesPerByte] &= ~(mask);
+    }
+}
+
 void Cube::setLayer(unsigned int z, bool value) {
     unsigned char* layer = &_layers[z * _bytesPerLayer];
     for(unsigned int i = 0; i < _bytesPerLayer; ++i) {

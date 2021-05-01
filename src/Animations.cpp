@@ -4,10 +4,13 @@
 
 #ifdef ARDUINO
     #include <stdlib.h>
+    #include <math.h>
 #else
     #include <cstdlib>
+    #include <cmath>
     using std::rand;
 	using std::memset;
+    using std::pow;
 #endif
 
 void Fixed::run(const Painter& painter, Cube& cube) {
@@ -16,22 +19,19 @@ void Fixed::run(const Painter& painter, Cube& cube) {
 REGISTER(Fixed);
 
 void ScrollRows::run(const Painter& painter, Cube& cube) {
-    for(unsigned int z = 0; z < cube.getSide(); ++z) {
-        for(unsigned int y = 0; y < cube.getSide(); ++y) {
-            for(unsigned int x = 0; x < cube.getSide(); ++x) {
-                cube.setPixel(x, y, z, true);
-                painter.paintCube(cube, 5);
-            }
-        }
-    }
-    for(int z = cube.getSide()-1; z >= 0; --z) {
-        for(int y = cube.getSide()-1; y >= 0; --y) {
-            for(int x = cube.getSide()-1; x >= 0; --x) {
-                cube.setPixel(x, y, z, false);
-                painter.paintCube(cube, 4);
-            }
-        }
-    }
+    int x = static_cast<unsigned int>(i / pow(cube.getSide(), 0)) % cube.getSide();
+    int y = static_cast<unsigned int>(i / pow(cube.getSide(), 1)) % cube.getSide();
+    int z = static_cast<unsigned int>(i / pow(cube.getSide(), 2)) % cube.getSide();
+
+    cube.togglePixel(x, y, z);
+    painter.paintCube(cube, 5);
+
+    i = (i + 1) % static_cast<unsigned int>(pow(cube.getSide(), 3) + 1);
+}
+
+void ScrollRows::init(Cube& cube) {
+    cube.clear();
+    i = 0;
 }
 REGISTER(ScrollRows);
 
@@ -133,9 +133,9 @@ Snake::Point Snake::findNext(Cube& cube, const Point& currentHead) const {
 }
 
 bool Snake::isValidNext(const Snake::Point& candidateNext, const Cube& cube) const {
-    return candidateNext.x >= 0 && candidateNext.x < cube.getSide()
-        && candidateNext.y >= 0 && candidateNext.y < cube.getSide()
-        && candidateNext.z >= 0 && candidateNext.z < cube.getSide()
+    return candidateNext.x >= 0 && candidateNext.x < static_cast<int>(cube.getSide())
+        && candidateNext.y >= 0 && candidateNext.y < static_cast<int>(cube.getSide())
+        && candidateNext.z >= 0 && candidateNext.z < static_cast<int>(cube.getSide())
         && !cube.getPixel(candidateNext.x, candidateNext.y, candidateNext.z);
 }
 REGISTER(Snake);
@@ -199,6 +199,7 @@ unsigned int Waves::findZ(unsigned int x, Cube& cube) const {
     for(unsigned int z = 0; z < cube.getSide(); ++z) {
         if(cube.getPixel(x, 0, z)) return z;
     }
+    return 0;
 }
 
 void Waves::moveLine(unsigned int x, unsigned int currentZ, unsigned int newZ, Cube& cube) {

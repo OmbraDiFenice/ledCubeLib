@@ -16,6 +16,10 @@ class ScrollRows : public Animation {
     public:
         ScrollRows() : Animation("scrollRows") {};
         void run(const Painter& painter, Cube& cube) override;
+        void init(Cube& cube) override;
+
+    private:
+        int i;
 };
 
 class ScrollPlaneZ : public Animation {

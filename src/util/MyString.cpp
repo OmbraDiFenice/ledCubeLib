@@ -17,7 +17,7 @@ MyString::MyString() {
 
 MyString::MyString(const char* str) {
     _len = strlen(str);
-    _buf = new char[_len];
+    _buf = new char[_len+1];
     strcpy(_buf, str);
 }
 

@@ -34,7 +34,7 @@ MyString AnimationRegistry::toString() {
         out.append(buf);
         out.append(" - ");
         out.append(_animations.at(i)->getName());
-        out.append("\n");
+        out.append("\n\r"); // the carriage return is needed to display the output correctly when using a simple serial monitor like screen
     }
     return out;
 }

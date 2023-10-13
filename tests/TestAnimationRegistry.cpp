@@ -53,7 +53,7 @@ TEST(TestAnimationRegistry, toString) {
     registry.add<TestAnimation1>();
     registry.add<TestAnimation2>();
 
-    MyString expectedOutput("0 - TestAnimation1\n1 - TestAnimation2\n");
+    MyString expectedOutput("0 - TestAnimation1\n\r1 - TestAnimation2\n\r");
 
     ASSERT(expectedOutput == registry.toString(), "should match");
 }

@@ -3,3 +3,5 @@
 raspi
 test
 .gdb_history
+.cache/
+compile_commands.json

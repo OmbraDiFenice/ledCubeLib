@@ -6,6 +6,9 @@ ArduinoAnimator::ArduinoAnimator(unsigned int outputReadyPin, unsigned int outpu
 	pinMode(clockPin, OUTPUT);
 	pinMode(outputPin, OUTPUT);
 	pinMode(outputReadyPin, OUTPUT);
+
+	digitalWrite(outputReadyPin, LOW);
+	digitalWrite(clockPin, LOW);
 }
 
 const Painter& ArduinoAnimator::getPainter() const {

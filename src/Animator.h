@@ -9,6 +9,7 @@ class Animator {
         Animator() = default;
         virtual ~Animator() = default;
 
+				void init(Cube& cube) const;
         void play(Animation& animation, Cube& cube) const;
 
     protected:

@@ -87,7 +87,7 @@ class Spin : public Animation {
 class Waves : public Animation {
     public:
         Waves() : Animation("waves"), direction(nullptr) {};
-        ~Waves();
+        virtual ~Waves();
         void run(const Painter& painter, Cube& cube) override;
         void init(Cube& cube) override;
 

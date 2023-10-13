@@ -23,14 +23,12 @@ class Vector {
         void append(T&& elem);
 
         inline T& at(unsigned int index) {
+            #ifndef ARDUINO
             if(index >= _size) {
-            #ifdef ARDUINO
-            return;
-            #else
             throw "index out of bounds";
-            #endif
             }
-            return _vec[index];
+            #endif
+            return _vec[index]; // on arduino this can lead to memory leaks
         };
 
     private:

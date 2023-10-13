@@ -99,4 +99,24 @@ class Waves : public Animation {
         int *direction;
 };
 
+class Walls : public Animation {
+    public:
+        Walls() : Animation("walls") {};
+        void run(const Painter& painter, Cube& cube) override;
+        void init(Cube& cube) override;
+
+		public:
+				struct Point{ unsigned int x; unsigned int y; Walls::Point& operator+=(const Walls::Point& other); };
+
+		private:
+				Walls::Point findIncrement(const Walls::Point& head, unsigned int max, const Walls::Point& current);
+
+		private:
+				Point _head;
+				Point _tail;
+				Point _lastHeadIncrement;
+				Point _lastTailIncrement;
+				unsigned int _currentLength;
+};
+
 #endif

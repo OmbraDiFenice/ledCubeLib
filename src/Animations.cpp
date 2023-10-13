@@ -220,3 +220,56 @@ void Waves::init(Cube& cube) {
     }
 }
 REGISTER(Waves);
+
+Walls::Point& Walls::Point::operator+=(const Walls::Point& other) {
+	x += other.x;
+	y += other.y;
+
+	return *this;
+}
+
+void Walls::run(const Painter& painter, Cube& cube) {
+	bool shouldGrow = _currentLength < cube.getSide();
+
+	for(unsigned int z = 0; z < cube.getSide(); ++z) {
+		cube.setPixel(_head.x, _head.y, z, true);
+		cube.setPixel(_tail.x, _tail.y, z, shouldGrow);
+	}
+
+	_lastHeadIncrement = findIncrement(_head, cube.getSide() - 1, _lastHeadIncrement);
+	_head += _lastHeadIncrement;
+
+	if(shouldGrow) {
+		++_currentLength;
+	} else {
+		_lastTailIncrement = findIncrement(_tail, cube.getSide() - 1, _lastTailIncrement);
+		_tail += _lastTailIncrement;
+	}
+
+	painter.paintCube(cube, 3);
+}
+
+void Walls::init(Cube& cube) {
+	cube.clear();
+	for(unsigned int z = 0; z < cube.getSide(); ++z) {
+		cube.setPixel(0, 0, z, true);
+	}
+
+	_head = {1, 0};
+	_tail = {0, 0};
+	_lastHeadIncrement = {1, 0};
+	_lastTailIncrement = {0, 0};
+	_currentLength = 1;
+}
+
+Walls::Point Walls::findIncrement(const Walls::Point& head, unsigned int max, const Walls::Point& current) {
+	Walls::Point increment = {0, 0};
+
+	if(head.x == max && head.y == 0  ) { increment.y =  1; return increment; }
+	if(head.x == max && head.y == max) { increment.x = -1; return increment; }
+	if(head.x == 0   && head.y == max) { increment.y = -1; return increment; }
+	if(head.x == 0   && head.y == 0  ) { increment.x =  1; return increment; }
+
+	return current;
+}
+REGISTER(Walls);

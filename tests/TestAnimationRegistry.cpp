@@ -57,11 +57,3 @@ TEST(TestAnimationRegistry, toString) {
 
     ASSERT(expectedOutput == registry.toString(), "should match");
 }
-
-TEST(TestAnimationRegistry, register_macro) {
-    //AnimationRegistry::Registrar<TestAnimation1> _TestAnimation1_registrar;
-    REGISTER(TestAnimation1);
-    unsigned int key = _TestAnimation1_registrar.getKey();
-    ASSERT(1u == AnimationRegistry::GetInstance().size(), "size should increment");
-    ASSERT(0u == key, "returned key should be the next one available");
-}

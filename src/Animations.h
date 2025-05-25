@@ -126,4 +126,22 @@ class Walls : public Animation {
 				unsigned int _currentLength;
 };
 
+class RandomMultiShift : public Animation {
+		public:
+				RandomMultiShift() : Animation("random multi shift") {};
+				virtual ~RandomMultiShift();
+				void init(Cube& cube) override;
+				void run(const Painter& painter, Cube& cube) override;
+
+		private:
+				struct PointShift { unsigned int x, y, z; unsigned int distance; bool slideUp; };
+
+		private:
+				void slide(RandomMultiShift::PointShift* points, size_t count, const Painter& painter, Cube& cube);
+
+		private:
+				unsigned int* z_cache = nullptr;
+				PointShift* points = nullptr;
+};
+
 #endif

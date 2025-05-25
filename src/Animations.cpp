@@ -283,3 +283,66 @@ Walls::Point Walls::findIncrement(const Walls::Point& head, unsigned int max, co
 	return current;
 }
 REGISTER(Walls);
+
+
+RandomMultiShift::~RandomMultiShift() {
+		if (z_cache != nullptr) delete[] z_cache;
+		z_cache = nullptr;
+		if (points != nullptr) delete[] points;
+		points = nullptr;
+}
+
+void RandomMultiShift::init(Cube& cube) {
+    cube.clear();
+		if(z_cache == nullptr) z_cache = new unsigned int[cube.getSide() * cube.getSide()];
+		if(points == nullptr) points = new PointShift[cube.getSide() * cube.getSide() / 2];
+
+    for(unsigned int x = 0; x < cube.getSide(); ++x) {
+				for(unsigned int y = 0; y < cube.getSide(); ++y) {
+						unsigned int z = rand() % cube.getSide();
+						cube.setPixel(x, y, z, true);
+						z_cache[x * cube.getSide() + y] = z;
+				}
+    }
+}
+
+void RandomMultiShift::run(const Painter& painter, Cube& cube) {
+		size_t count = rand() % (cube.getSide() * cube.getSide() / 2) + 1;
+		unsigned int maxDistance = 0;
+
+		for(size_t i = 0; i < count; ++i) {
+				points[i].x = rand() % cube.getSide();
+				points[i].y = rand() % cube.getSide();
+				points[i].z = z_cache[points[i].x * cube.getSide() + points[i].y];
+
+				unsigned int maxDistanceUp = cube.getSide() - 1 - points[i].z;
+				unsigned int maxDistanceDown = points[i].z;
+
+				points[i].slideUp = maxDistanceUp > maxDistanceDown;
+				unsigned int distance = (rand() % (points[i].slideUp ? maxDistanceUp : maxDistanceDown)) + 1;
+				points[i].distance = distance;
+
+				if(distance > maxDistance) maxDistance = distance; 
+		}
+
+		while(maxDistance > 0) {
+				slide(points, count, painter, cube);
+				painter.paintCube(cube, 2);
+				--maxDistance;
+		}
+    painter.paintCube(cube, 50);
+}
+
+void RandomMultiShift::slide(RandomMultiShift::PointShift* points, size_t count, const Painter& painter, Cube& cube) {
+		for(size_t i = 0; i < count; ++i) {
+				PointShift& point = points[i];
+				if(point.distance <= 0) continue;
+
+				cube.setPixel(point.x, point.y, point.z, false);
+				point.z += point.slideUp ? 1 : -1;
+				cube.setPixel(point.x, point.y, point.z, true);
+				--point.distance;
+				z_cache[point.x * cube.getSide() + point.y] = point.z;
+		}
+}
+REGISTER(RandomMultiShift);

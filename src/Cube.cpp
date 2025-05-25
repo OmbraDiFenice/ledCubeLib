@@ -19,8 +19,7 @@ Cube::Cube(unsigned int side) : _side(side) {
     clear();
 };
 
-Cube::Cube(const Cube& other) {
-    _side = other._side;
+Cube::Cube(const Cube& other) : _side(other.getSide()) {
     _bytesPerLayer = other._bytesPerLayer;
     _linesPerByte = other._linesPerByte;
     _size = other._size;

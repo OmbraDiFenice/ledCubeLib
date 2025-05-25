@@ -25,7 +25,7 @@ class Cube {
         inline unsigned char* findLayer(unsigned int layer) const { return &_layers[layer * _bytesPerLayer]; }
 
     private:
-        unsigned int _side;
+        const unsigned int _side;
         unsigned int _size;
         unsigned char* _layers;
         unsigned int _bytesPerLayer;

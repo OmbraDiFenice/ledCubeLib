@@ -6,10 +6,17 @@
 #include <Animation.h>
 #include <AnimationRegistry.h>
 
-class Fixed : public Animation {
+class FixedOff : public Animation {
     public:
-        Fixed() : Animation("fixed") {};
+        FixedOff() : Animation("fixed off") {};
         void run(const Painter& painter, Cube& cube) override;
+};
+
+class FixedOn: public Animation {
+		public:
+				FixedOn() : Animation("fixed on") {};
+				void run(const Painter& painter, Cube& cube) override;
+				void init(Cube& cube) override;
 };
 
 class ScrollRows : public Animation {

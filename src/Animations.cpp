@@ -13,10 +13,20 @@
     using std::pow;
 #endif
 
-void Fixed::run(const Painter& painter, Cube& cube) {
+void FixedOff::run(const Painter& painter, Cube& cube) {
     painter.paintCube(cube);
 }
-REGISTER(Fixed);
+REGISTER(FixedOff);
+
+void FixedOn::run(const Painter& painter, Cube& cube) {
+    painter.paintCube(cube);
+}
+void FixedOn::init(Cube& cube) {
+		for (unsigned int z = 0; z < cube.getSide(); ++z) {
+				cube.setLayer(z, true);
+		}
+}
+REGISTER(FixedOn);
 
 void ScrollRows::run(const Painter& painter, Cube& cube) {
     int x = static_cast<unsigned int>(i / pow(cube.getSide(), 0)) % cube.getSide();

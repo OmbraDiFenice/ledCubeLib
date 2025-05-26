@@ -1,6 +1,22 @@
 #ifndef __Cube_h__
 #define __Cube_h__
 
+struct Pixel3d {
+		unsigned int x;
+		unsigned int y;
+		unsigned int z;
+};
+
+struct Vector3d {
+		int dx;
+		int dy;
+		int dz;
+
+		Vector3d operator-() {
+				return Vector3d{-dx, -dy, -dz};
+		}
+};
+
 class Cube {
     public:
         explicit Cube(unsigned int size);
@@ -9,7 +25,9 @@ class Cube {
 
         void clear();
         void setPixel(unsigned int x, unsigned int y, unsigned int z, bool value);
+        void setPixel(const Pixel3d& pixel, bool value);
         bool getPixel(unsigned int x, unsigned int y, unsigned int z) const;
+				void movePixel(Pixel3d& pixel, Vector3d vector);
         void togglePixel(unsigned int x, unsigned int y, unsigned int z);
         void setLayer(unsigned int z, bool value);
         void shiftLayers(int amount = 1);

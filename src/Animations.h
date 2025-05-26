@@ -144,4 +144,23 @@ class RandomMultiShift : public Animation {
 				PointShift* points = nullptr;
 };
 
+class SubCubes : public Animation {
+		public:
+				SubCubes() : Animation("spin sub cubes") {};
+				virtual ~SubCubes();
+				void init(Cube& cube) override;
+				void run(const Painter& painter, Cube& cube) override;
+
+		private:
+				void moveSubCube(Pixel3d* subcube, Vector3d vector, Cube& cube);
+
+		private:
+				unsigned int _subcubeSide;
+				Pixel3d* _subcube1 = nullptr;
+				Pixel3d* _subcube2 = nullptr;
+				Vector3d _direction1[6] = { {1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {-1, 0, 0}, {0, -1, 0}, {0, 0, -1} };
+				Vector3d _direction2[6] = { {-1, 0, 0}, {0, -1, 0}, {0, 0, -1}, {1, 0, 0}, {0, 1, 0}, {0, 0, 1} };
+				unsigned int _steps;
+};
+
 #endif

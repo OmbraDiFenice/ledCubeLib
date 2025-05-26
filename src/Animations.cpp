@@ -346,3 +346,61 @@ void RandomMultiShift::slide(RandomMultiShift::PointShift* points, size_t count,
 		}
 }
 REGISTER(RandomMultiShift);
+
+SubCubes::~SubCubes() {
+		if (_subcube1 != nullptr) delete[] _subcube1;
+		_subcube1 = nullptr;
+		if (_subcube2 != nullptr) delete[] _subcube2;
+		_subcube2 = nullptr;
+}
+
+void SubCubes::init(Cube& cube) {
+		cube.clear();
+		_subcubeSide = cube.getSide() / 2;
+		_subcube1 = new Pixel3d[_subcubeSide * _subcubeSide * _subcubeSide];
+		_subcube2 = new Pixel3d[_subcubeSide * _subcubeSide * _subcubeSide];
+		_steps = cube.getSide() / 2;
+
+		for(unsigned int x = 0; x < _subcubeSide; ++x) {
+				for(unsigned int y = 0; y < _subcubeSide; ++y) {
+						for (unsigned int z = 0; z < _subcubeSide; ++z) {
+								_subcube1[x * _subcubeSide * _subcubeSide + y * _subcubeSide + z].x = x;
+								_subcube1[x * _subcubeSide * _subcubeSide + y * _subcubeSide + z].y = y;
+								_subcube1[x * _subcubeSide * _subcubeSide + y * _subcubeSide + z].z = z;
+
+								_subcube2[x * _subcubeSide * _subcubeSide + y * _subcubeSide + z].x = cube.getSide() - 1 -x;
+								_subcube2[x * _subcubeSide * _subcubeSide + y * _subcubeSide + z].y = cube.getSide() - 1 -y;
+								_subcube2[x * _subcubeSide * _subcubeSide + y * _subcubeSide + z].z = cube.getSide() - 1 -z;
+						}
+				}
+		}
+
+		for(unsigned int i = 0; i < _subcubeSide * _subcubeSide * _subcubeSide; ++i) {
+				cube.setPixel(_subcube1[i], true);
+				cube.setPixel(_subcube2[i], true);
+		}
+}
+
+void SubCubes::run(const Painter& painter, Cube& cube) {
+		for(unsigned int i = 0; i < 6; ++i) {
+				painter.paintCube(cube, 15);
+				while(_steps > 0) {
+						moveSubCube(_subcube1, _direction1[i], cube);
+						moveSubCube(_subcube2, _direction2[i], cube);
+						painter.paintCube(cube, 2);
+						--_steps;
+				}
+				_steps = cube.getSide() / 2;
+		}
+}
+
+void SubCubes::moveSubCube(Pixel3d* subcube, Vector3d vector, Cube& cube) {
+		const unsigned int pixels = _subcubeSide * _subcubeSide * _subcubeSide;
+		for(unsigned int i = 0; i < pixels; ++i) {
+				cube.movePixel(subcube[i], vector);
+		}
+		for(unsigned int i = 0; i < pixels; ++i) {
+				cube.setPixel(subcube[i], true);
+		}
+}
+REGISTER(SubCubes);

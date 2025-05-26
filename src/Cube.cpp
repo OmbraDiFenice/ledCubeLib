@@ -46,6 +46,10 @@ void Cube::setPixel(unsigned int x, unsigned int y, unsigned int z, bool value) 
     }
 }
 
+void Cube::setPixel(const Pixel3d& pixel, bool value) {
+		setPixel(pixel.x, pixel.y, pixel.z, value);
+}
+
 void Cube::togglePixel(unsigned int x, unsigned int y, unsigned int z) {
     unsigned char* layer = &_layers[z * _bytesPerLayer];
     unsigned char mask = 1 << x;
@@ -87,4 +91,12 @@ bool Cube::getPixel(unsigned int x, unsigned int y, unsigned int z) const {
     unsigned char mask = 1 << x;
     if(y % _linesPerByte == 0) mask <<= _side;
     return (layer[y / _linesPerByte] & mask) != 0;
+}
+
+void Cube::movePixel(Pixel3d& pixel, Vector3d vector) {
+		setPixel(pixel.x, pixel.y, pixel.z, false);
+		pixel.x += vector.dx;
+		pixel.y += vector.dy;
+		pixel.z += vector.dz;
+		setPixel(pixel.x, pixel.y, pixel.z, true);
 }
